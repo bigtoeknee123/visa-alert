@@ -1,4 +1,4 @@
-name: Visa Check
+name: Check Visa Slot
 
 on:
   workflow_dispatch:
@@ -6,16 +6,22 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          path: visa_alert
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install -r visa_alert/requirements.txt
 
       - name: Run visa checker
-        run: python main.py
+        run: python visa_alert/main.py
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
