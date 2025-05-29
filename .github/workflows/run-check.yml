@@ -3,7 +3,7 @@ name: Check Visa Slot Every Minute
 on:
   schedule:
     - cron: "* * * * *"  # every minute
-  workflow_dispatch:    # allows manual trigger
+  workflow_dispatch:     # allow manual run from GitHub UI
 
 jobs:
   run:
@@ -15,7 +15,7 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Run Railway job
-        run: railway run "python main.py"
+      - name: Run Railway command
+        run: railway run --project ${{ secrets.RAILWAY_PROJECT }} "python main.py"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
