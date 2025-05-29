@@ -8,6 +8,7 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -15,7 +16,12 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Run Railway command
-        run: railway --project ${{ secrets.RAILWAY_PROJECT }} run -- python main.py
+      - name: Link to Railway project
+        run: railway link --project ${{ secrets.RAILWAY_PROJECT }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Run Python script on Railway
+        run: railway run -- python main.py
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
