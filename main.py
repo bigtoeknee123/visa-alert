@@ -1,10 +1,11 @@
 import requests
 import json
+import os
 
 # --- Config ---
 VISA_ID = 319
 API_URL = "https://api.visasbot.com/api/visa/list"
-SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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"
+SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 
 # --- Slack Notification Function ---
 def send_slack_alert(visa_info):
@@ -23,7 +24,7 @@ def send_slack_alert(visa_info):
     }
     response = requests.post(SLACK_WEBHOOK_URL, json=message)
     if response.status_code != 200:
-        print(f"Slack error: {response.text}")
+        print(f"Slack error: {response.status_code} → {response.text}")
     else:
         print("✅ Slack alert sent.")
 
@@ -45,10 +46,12 @@ def check_status():
 
         if visa["status"].lower() == "open":
             send_slack_alert(visa)
+        else:
+            print("Status is not open. No alert sent.")
 
     except Exception as e:
         print(f"Error occurred: {e}")
 
-# --- Run Script ---
+# --- Run once ---
 if __name__ == "__main__":
     check_status()
